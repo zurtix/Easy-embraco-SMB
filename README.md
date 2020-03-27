@@ -22,6 +22,6 @@ sudo smbclient -H \\\\127.0.0.1\\share\
 dir\
 
 smb: \> dir\
-  .                                   D\
-  ..                                  D\
-  nc.exe                              N\
+  .      \
+  ..     \
+  nc.exe 
