@@ -85,5 +85,4 @@ if __name__ == "__main__":
     if args.load:
         os.popen("cp {load} {dest}".format(load=args.load,dest=smb_pub_path))
 
-    p = Payload(args.target, args.host, args.port, args.user, args.passw)
-    p.execute()
+    Payload(args.target, args.host, args.port, args.user, args.passw).execute()

