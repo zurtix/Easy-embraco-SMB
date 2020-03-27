@@ -60,9 +60,9 @@ def setup():
 def r_chown(p):
     for root, dirs, files in os.walk(p):
         for d in dirs:
-            os.chown(os.path.join(root, d), "nobody", "nobody")
+            os.chown(os.path.join(root, d), 65534, 65534)
         for f in files:
-            os.chown(os.path.join(root, f), "nobody", "nobody")
+            os.chown(os.path.join(root, f), 65534, 65534)
 
 def smb_restart():
     if os.system("sudo service smbd restart") == 1:
