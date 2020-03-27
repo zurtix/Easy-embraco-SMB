@@ -1,7 +1,7 @@
 # Easy-embraco-SMB
 
 ## What's it for?
-Script is used to gain an easy reverse shell on servers running embraco and have SMB enabled. To escape firewall, calling our nc.exe executable from a remote destiation (our machine) will allow us to load the application into memory on the server side without having the need to install anything.
+Easy-embraco-SMB is used to gain an easy reverse shell on servers running embraco and have SMB enabled. To escape firewall, calling our nc.exe executable from a remote destiation (our machine) will allow us to load the application into memory on the server side without having the need to install anything.
 
 ## Command line arguments
 Easy-embraco-SMB.py [-h] --target TARGET --host HOST [--port PORT] [--load LOAD] --user USER --passw PASSW
