@@ -41,6 +41,7 @@ def setup(f):
     os.chmod(smb_pub_path, 0o222)
             
     if f and os.popen("cp {load} {dest}".format(load=f, dest=smb_pub_path)):
+        os.chmod("{dest}/{load}".format(dest=smb_pub_path, load=f), 0o555)
         print("File copied")
             
     # set access to directory 
